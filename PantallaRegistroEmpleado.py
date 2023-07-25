@@ -37,7 +37,7 @@ class Ui_MainWindow(object):
         self.actualizar.setGeometry(QtCore.QRect(190, 210, 91, 21))
         self.actualizar.setObjectName("actualizar")
         self.listaEmpleados = QtWidgets.QTableWidget(self.centralwidget)
-        self.listaEmpleados.setGeometry(QtCore.QRect(330, 80, 421, 211))
+        self.listaEmpleados.setGeometry(QtCore.QRect(320, 70, 521, 211))
         self.listaEmpleados.setObjectName("listaEmpleados")
         self.listaEmpleados.setColumnCount(0)
         self.listaEmpleados.setRowCount(0)
@@ -81,20 +81,10 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
-    def retranslateUi(self, MainWindow):
-        _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.label.setText(_translate("MainWindow", "Nombre"))
-        self.label_2.setText(_translate("MainWindow", "Cargo"))
-        self.guardar.setText(_translate("MainWindow", "Guardar"))
-        self.actualizar.setText(_translate("MainWindow", "Actualizar"))
-        self.label_3.setText(_translate("MainWindow", "Apellido"))
-        self.label_4.setText(_translate("MainWindow", "Sueldo"))
-
+        
     def crear_base(self):
             cursor = conn.cursor()
-            cadena_sql = 'CREATE TABLE Empleado (nombre TEXT,apellido TEXT,cargo TEXT, sueldo INTEGER)'
+            cadena_sql = 'CREATE TABLE Empleado (nombre TEXT,apellido TEXT,cargo TEXT, sueldo INTEGER, bono FLOAT)'
             try:
                 cursor.execute(cadena_sql)
             except:
@@ -107,8 +97,9 @@ class Ui_MainWindow(object):
         apellido = str(self.apellido.text())
         cargo = str(self.cargo.text())
         sueldo = int(self.sueldo.text())
-        cadena_sql = """INSERT INTO Empleado (nombre, apellido, cargo, sueldo) VALUES ('%s','%s','%s', %d);""" % \
-    (nombre, apellido, cargo, sueldo)
+        bono = sueldo*0.10
+        cadena_sql = """INSERT INTO Empleado (nombre, apellido, cargo, sueldo, bono) VALUES ('%s','%s','%s', %d, %s);""" % \
+    (nombre, apellido, cargo, sueldo, bono)
         # ejecutar el SQL
         cursor.execute(cadena_sql)
         # confirmar los cambios
@@ -120,7 +111,7 @@ class Ui_MainWindow(object):
         cadena_consulta_sql = "SELECT * from Empleado"
         cursor.execute(cadena_consulta_sql)
         informacion = cursor.fetchall()
-        database_table_column_count = 4
+        database_table_column_count = 5
         self.listaEmpleados.setColumnCount(database_table_column_count)
         numero_filas = len(informacion)
         self.listaEmpleados.setRowCount(numero_filas)
@@ -131,7 +122,7 @@ class Ui_MainWindow(object):
                 elemento = str(elemento)
                 nuevo_registro = QtWidgets.QTableWidgetItem(elemento)
                 self.listaEmpleados.setItem(j, i, nuevo_registro)
-
+             
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
